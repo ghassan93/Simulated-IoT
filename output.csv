@@ -1,0 +1,21 @@
+scenario,heart_rate,spo2,temperature,acceleration,status,message
+high_hr,131,98,37.8,0.66,WARNING,High heart rate
+fall,124,96,37.4,2.89,EMERGENCY,Fall detected
+fall,103,96,37.3,2.94,EMERGENCY,Fall detected
+high_hr,134,99,37.2,0.58,WARNING,High heart rate
+high_hr,129,97,36.5,0.71,WARNING,High heart rate
+fall,101,90,36.6,3.43,EMERGENCY,Fall detected
+high_hr,133,95,36.5,0.36,WARNING,High heart rate
+normal,92,100,36.6,0.25,NORMAL,Vitals within safe range
+normal,66,97,37.1,0.91,NORMAL,Vitals within safe range
+fall,124,92,37.6,3.48,EMERGENCY,Fall detected
+fall,128,94,37.5,3.67,EMERGENCY,Fall detected
+low_oxygen,111,84,36.6,0.55,EMERGENCY,Low oxygen saturation
+normal,77,98,37.3,0.55,NORMAL,Vitals within safe range
+fall,93,91,36.8,3.43,EMERGENCY,Fall detected
+high_hr,125,96,37.6,0.27,WARNING,High heart rate
+low_oxygen,111,88,36.5,0.57,EMERGENCY,Low oxygen saturation
+normal,72,98,36.4,0.23,NORMAL,Vitals within safe range
+low_oxygen,88,85,37.3,0.27,EMERGENCY,Low oxygen saturation
+high_hr,135,98,37.3,0.36,WARNING,High heart rate
+normal,76,99,37.0,0.21,NORMAL,Vitals within safe range
