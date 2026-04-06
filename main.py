@@ -8,15 +8,18 @@ def run_system(iterations=20, delay=1):
 
     for i in range(iterations):
         scenario, data = generate_scenario()
-        status, message = analyze(data)
-        log_data(scenario, data, status, message)
+
+        status, score, reason = analyze(data)
+
+        log_data(scenario, data, score, status, reason)
 
         print(f"Reading {i+1}")
         print("Scenario:", scenario)
         print("Data:", data)
+        print("Score:", score)
         print("Status:", status)
-        print("Message:", message)
-        print("-" * 40)
+        print("Reason:", reason)
+        print("-" * 50)
 
         time.sleep(delay)
 

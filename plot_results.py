@@ -3,11 +3,27 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("output.csv")
 
-plt.figure(figsize=(8, 4))
-plt.plot(df.index, df["heart_rate"], marker="o")
-plt.title("Heart Rate Readings Over Time")
-plt.xlabel("Reading Index")
-plt.ylabel("Heart Rate (bpm)")
-plt.grid(True)
-plt.tight_layout()
+# --- Heart Rate ---
+plt.figure()
+plt.plot(df["heart_rate"])
+plt.title("Heart Rate Over Time")
+plt.xlabel("Reading")
+plt.ylabel("Heart Rate")
+plt.grid()
+
+# --- Score ---
+plt.figure()
+plt.plot(df["score"])
+plt.title("Risk Score Over Time")
+plt.xlabel("Reading")
+plt.ylabel("Score")
+plt.grid()
+
+# --- Status Count ---
+plt.figure()
+df["status"].value_counts().plot(kind="bar")
+plt.title("System Status Distribution")
+plt.xlabel("Status")
+plt.ylabel("Count")
+
 plt.show()

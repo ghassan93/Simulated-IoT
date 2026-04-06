@@ -13,11 +13,12 @@ def init_logger():
                 "spo2",
                 "temperature",
                 "acceleration",
+                "score",
                 "status",
-                "message"
+                "reason"
             ])
 
-def log_data(scenario, data, status, message):
+def log_data(scenario, data, score, status, reason):
     with open(FILE_NAME, "a", newline="") as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -26,6 +27,7 @@ def log_data(scenario, data, status, message):
             data["spo2"],
             data["temperature"],
             data["acceleration"],
+            score,
             status,
-            message
+            reason
         ])
