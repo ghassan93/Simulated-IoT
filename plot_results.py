@@ -3,27 +3,40 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("output.csv")
 
-# --- Heart Rate ---
-plt.figure()
-plt.plot(df["heart_rate"])
+plt.figure(figsize=(8, 4))
+plt.plot(df["heart_rate"], marker="o")
 plt.title("Heart Rate Over Time")
 plt.xlabel("Reading")
-plt.ylabel("Heart Rate")
-plt.grid()
+plt.ylabel("Heart Rate (bpm)")
+plt.grid(True)
 
-# --- Score ---
-plt.figure()
-plt.plot(df["score"])
+plt.figure(figsize=(8, 4))
+plt.plot(df["spo2"], marker="o")
+plt.title("SpO2 Over Time")
+plt.xlabel("Reading")
+plt.ylabel("SpO2 (%)")
+plt.grid(True)
+
+plt.figure(figsize=(8, 4))
+plt.plot(df["score"], marker="o")
 plt.title("Risk Score Over Time")
 plt.xlabel("Reading")
-plt.ylabel("Score")
-plt.grid()
+plt.ylabel("Risk Score")
+plt.grid(True)
 
-# --- Status Count ---
-plt.figure()
+plt.figure(figsize=(8, 4))
 df["status"].value_counts().plot(kind="bar")
-plt.title("System Status Distribution")
+plt.title("Status Distribution")
 plt.xlabel("Status")
 plt.ylabel("Count")
+plt.grid(axis="y")
 
+plt.figure(figsize=(8, 4))
+df["scenario"].value_counts().plot(kind="bar")
+plt.title("Scenario Distribution")
+plt.xlabel("Scenario")
+plt.ylabel("Count")
+plt.grid(axis="y")
+
+plt.tight_layout()
 plt.show()

@@ -4,11 +4,17 @@ from sensor_simulation import (
     generate_fall_data,
     generate_low_oxygen_data,
     generate_high_hr_data,
+    generate_combined_critical_data
 )
+
 
 def generate_scenario():
     scenario = random.choice([
-        "normal", "fall", "low_oxygen", "high_hr"
+        "normal",
+        "fall",
+        "low_oxygen",
+        "high_hr",
+        "combined_critical"
     ])
 
     if scenario == "normal":
@@ -17,4 +23,6 @@ def generate_scenario():
         return scenario, generate_fall_data()
     if scenario == "low_oxygen":
         return scenario, generate_low_oxygen_data()
-    return scenario, generate_high_hr_data()
+    if scenario == "high_hr":
+        return scenario, generate_high_hr_data()
+    return scenario, generate_combined_critical_data()

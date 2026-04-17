@@ -1,0 +1,12 @@
+{
+  "patient_id": "P001",
+  "name": "Ahmed Salem",
+  "age": 76,
+  "gender": "Male",
+  "weight": 72,
+  "blood_type": "A+",
+  "chronic_conditions": ["Heart Disease", "Hypertension"],
+  "allergies": ["Penicillin"],
+  "emergency_contact": "Son - +970599123456",
+  "notes": "High fall risk"
+}
