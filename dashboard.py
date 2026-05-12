@@ -78,6 +78,25 @@ st.markdown("""
     color: #334155;
     font-weight: 700;
 }
+.ai-box {
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #eef2ff, #ecfeff);
+    color:#111212;
+    border-left: 7px solid #4f46e5;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.10);
+    line-height: 1.7;
+}
+.ai-pill {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 800;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -171,9 +190,19 @@ smart_explanation = get_value(
     "smart_explanation",
     "Trend interpretation is available after running the updated monitoring engine."
 )
+ai_explanation = get_value(
+    latest,
+    "ai_explanation",
+    "Fuzzy-inspired AI explanation is available after generating new readings."
+)
+patient_state = get_value(latest, "patient_state", "Stable")
+fuzzy_risk_score = get_value(latest, "fuzzy_risk_score", latest.get("score", 0))
+confidence_score = get_value(latest, "confidence_score", 50)
+stability_index = get_value(latest, "stability_index", 100)
+fuzzy_breakdown = get_value(latest, "fuzzy_breakdown", "Not available yet")
 
 st.markdown('<div class="main-title">Privacy-Aware Elderly Monitoring Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Edge-based monitoring for fall detection, trend interpretation, and vital sign alerts</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Edge-based monitoring with fuzzy-inspired risk scoring, early warning, and explainable smart alerts</div>', unsafe_allow_html=True)
 
 # Profile section
 st.markdown('<div class="section-title">Patient Profile</div>', unsafe_allow_html=True)
@@ -198,13 +227,14 @@ with p2:
     <div class="profile-box">
         <b>Emergency Contact:</b><br>{profile['emergency_contact']}<br><br>
         <b>Current Risk Level:</b><br><span class="{risk_class(latest['risk_level'])}">{latest['risk_level']}</span><br><br>
+        <b>Patient State:</b><br>{patient_state}<br><br>
         <b>Stability:</b><br>{stability_status}
     </div>
     """, unsafe_allow_html=True)
 
 # Live metrics
 st.markdown('<div class="section-title">Live Patient Status</div>', unsafe_allow_html=True)
-c1, c2, c3, c4, c5 = st.columns(5)
+c1, c2, c3, c4, c5, c6 = st.columns(6)
 
 with c1:
     st.markdown(
@@ -231,7 +261,7 @@ with c3:
 with c4:
     risk_css = risk_class(latest["risk_level"])
     st.markdown(
-        f'<div class="card"><h4>Risk Score</h4><div class="metric-value">{latest["score"]}</div>'
+        f'<div class="card"><h4>Fuzzy Risk</h4><div class="metric-value">{fuzzy_risk_score}%</div>'
         f'<div class="trend-small {risk_css}">{latest["risk_level"]}</div></div>',
         unsafe_allow_html=True
     )
@@ -239,8 +269,15 @@ with c4:
 with c5:
     css_class = latest["status"].lower()
     st.markdown(
-        f'<div class="card"><h4>Status</h4><div class="metric-value {css_class}">{latest["status"]}</div>'
-        f'<div class="trend-small">{stability_status}</div></div>',
+        f'<div class="card"><h4>Patient State</h4><div class="metric-value {css_class}">{patient_state}</div>'
+        f'<div class="trend-small">{latest["status"]}</div></div>',
+        unsafe_allow_html=True
+    )
+
+with c6:
+    st.markdown(
+        f'<div class="card"><h4>Confidence</h4><div class="metric-value">{confidence_score}%</div>'
+        f'<div class="trend-small">Stability Index: {stability_index}%</div></div>',
         unsafe_allow_html=True
     )
 
@@ -256,6 +293,7 @@ with a1:
 with a2:
     st.info(f"**Suggested Action:** {latest['action']}")
     st.info(f"**Risk Level:** {latest['risk_level']}")
+    st.info(f"**Patient State:** {patient_state}")
     st.info(f"**Early Warning:** {early_warning}")
 
 st.markdown(f"""
@@ -263,6 +301,18 @@ st.markdown(f"""
     <b>Smart Analysis Panel</b><br>
     {smart_explanation}<br>
     <b>Clinical Interpretation:</b> {latest['reason']}
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown(f"""
+<div class="ai-box">
+    <b>Explainable Fuzzy AI Panel</b><br>
+    <span class="ai-pill">Patient State: {patient_state}</span>
+    <span class="ai-pill">Fuzzy Risk: {fuzzy_risk_score}%</span>
+    <span class="ai-pill">Confidence: {confidence_score}%</span>
+    <span class="ai-pill">Stability Index: {stability_index}%</span><br>
+    {ai_explanation}<br>
+    <b>Fuzzy Breakdown:</b> {fuzzy_breakdown}
 </div>
 """, unsafe_allow_html=True)
 
@@ -275,21 +325,27 @@ else:
 
 # Daily snapshot
 st.markdown('<div class="section-title">Daily Snapshot</div>', unsafe_allow_html=True)
-s1, s2, s3, s4, s5 = st.columns(5)
+s1, s2, s3, s4, s5, s6 = st.columns(6)
 
 s1.metric("Avg Heart Rate", round(df["heart_rate"].mean(), 1))
 s2.metric("Lowest SpO2", int(df["spo2"].min()))
 s3.metric("Highest Temp", df["temperature"].max())
 s4.metric("Warnings", int((df["status"] == "WARNING").sum()))
 s5.metric("Emergencies", int((df["status"] == "EMERGENCY").sum()))
+if "fuzzy_risk_score" in df.columns:
+    s6.metric("Avg Fuzzy Risk", round(df["fuzzy_risk_score"].mean(), 1))
+else:
+    s6.metric("Avg Fuzzy Risk", "N/A")
 
 # Trend interpretation snapshot
 st.markdown('<div class="section-title">Trend Interpretation Snapshot</div>', unsafe_allow_html=True)
-t1, t2, t3, t4 = st.columns(4)
+t1, t2, t3, t4, t5, t6 = st.columns(6)
 t1.metric("Heart Rate Trend", trend_icon(hr_trend))
 t2.metric("SpO2 Trend", trend_icon(spo2_trend))
 t3.metric("Temperature Trend", trend_icon(temp_trend))
 t4.metric("Stability", stability_status)
+t5.metric("Patient State", patient_state)
+t6.metric("Confidence", f"{confidence_score}%")
 
 # Charts
 st.markdown('<div class="section-title">Vital Sign Trends</div>', unsafe_allow_html=True)
@@ -315,10 +371,11 @@ with ch2:
 
 st.markdown('<div class="section-title">Risk Score Trend</div>', unsafe_allow_html=True)
 fig3, ax3 = plt.subplots(figsize=(8, 2))
-ax3.plot(df["score"], marker="o")
-ax3.set_title("Risk Score Over Time")
+risk_series = df["fuzzy_risk_score"] if "fuzzy_risk_score" in df.columns else df["score"]
+ax3.plot(risk_series, marker="o")
+ax3.set_title("Fuzzy Risk Score Over Time")
 ax3.set_xlabel("Reading")
-ax3.set_ylabel("Score")
+ax3.set_ylabel("Risk %")
 ax3.grid(True)
 st.pyplot(fig3)
 
@@ -331,6 +388,10 @@ with d1:
 
 with d2:
     st.bar_chart(df["scenario"].value_counts())
+
+if "patient_state" in df.columns:
+    st.markdown('<div class="section-title">AI Patient State Distribution</div>', unsafe_allow_html=True)
+    st.bar_chart(df["patient_state"].value_counts())
 
 # Alert history
 st.markdown('<div class="section-title">Recent Alert History</div>', unsafe_allow_html=True)
