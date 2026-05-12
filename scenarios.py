@@ -53,7 +53,7 @@ def generate_scenario(selected_scenario="Random"):
     else:
         scenario = random.choices(
             population=list(SCENARIO_GENERATORS.keys()),
-            weights=[35, 10, 14, 14, 9, 10, 8],
+            weights=[65, 5, 8, 8, 4, 5, 5],
             k=1
         )[0]
 
